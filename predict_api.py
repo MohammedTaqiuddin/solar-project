@@ -52,7 +52,7 @@ def predict():
         ]], columns=FEATURES)
 
         prediction = float(model.predict(inp)[0])
-        return jsonify({"predicted_power_kw": round(prediction, 4)})
+        return jsonify({"predicted_power_kw": round(float(prediction), 4)})
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
@@ -75,7 +75,7 @@ def predict_day():
                 int(data.get("month", 6)),
             ]], columns=FEATURES)
             pred = float(model.predict(inp)[0])
-            predictions.append({"hour": hour, "predicted_kw": round(max(pred, 0), 4)})
+            predictions.append({"hour": hour, "predicted_kw": round(float(max(pred, 0)), 4)})
         return jsonify({"predictions": predictions})
     except Exception as e:
         return jsonify({"error": str(e)}), 400
@@ -87,7 +87,7 @@ def model_info():
     try:
         # Feature importance
         importances = model.feature_importances_.tolist()
-        fi = [{"feature": f, "importance": round(v, 4)}
+        fi = [{"feature": f, "importance": round(float(v), 4)}
               for f, v in sorted(zip(FEATURES, importances),
                                  key=lambda x: x[1], reverse=True)]
 
@@ -108,12 +108,12 @@ def model_info():
         return jsonify({
             "feature_importance": fi,
             "scatter": {
-                "actual": [round(v, 4) for v in y_actual],
-                "predicted": [round(v, 4) for v in y_pred],
+                "actual": [round(float(v), 4) for v in y_actual],
+                "predicted": [round(float(v), 4) for v in y_pred],
             },
             "hourly_pattern": {
-                "actual": [round(v, 4) for v in hourly_actual],
-                "predicted": [round(v, 4) for v in hourly_pred],
+                "actual": [round(float(v), 4) for v in hourly_actual],
+                "predicted": [round(float(v), 4) for v in hourly_pred],
             },
             "metrics": {
                 "r2": 0.9993,
