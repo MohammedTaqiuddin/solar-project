@@ -34,7 +34,7 @@ print("  Solar Power Prediction — Corrected Training Script")
 print("=" * 60)
 
 # Load from Excel (Hourly_Data sheet)
-df = pd.read_excel("E:/solar_panel_dataset.xlsx", sheet_name="Hourly_Data")
+df = pd.read_excel("solar_panel_dataset.xlsx", sheet_name="Hourly_Data")
 print(f"\n[1] Dataset loaded: {df.shape[0]:,} rows x {df.shape[1]} columns")
 
 # ─────────────────────────────────────────────

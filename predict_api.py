@@ -17,7 +17,7 @@ CORS(app)
 
 # Load model once at startup
 MODEL_PATH = os.path.join("solar_model_Gradient_Boosting.pkl")
-DATASET_PATH = "E:/solar_panel_dataset.xlsx"
+DATASET_PATH = "solar_panel_dataset.xlsx"
 
 FEATURES = [
     "Solar_Irradiance_W_m2",
