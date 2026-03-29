@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { TrendingUp, TrendingDown } from 'lucide-react';
 
 interface CurrentValueCardProps {
@@ -21,9 +21,23 @@ const CurrentValueCard: React.FC<CurrentValueCardProps> = ({
   color,
 }) => {
   const isPositiveChange = change >= 0;
-  
+  const [isFlashing, setIsFlashing] = useState(false);
+
+  // Flash effect when value changes
+  useEffect(() => {
+    if (value !== null) {
+      setIsFlashing(true);
+      const timer = setTimeout(() => setIsFlashing(false), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [value]);
+
   return (
-    <div className={`bg-white rounded-xl shadow-sm p-5 border-l-4 ${color} transition-all duration-300`}>
+    <div
+      className={`bg-white rounded-xl shadow-sm p-5 border-l-4 ${color} transition-all duration-300 ${
+        isFlashing ? 'ring-2 ring-offset-1 ring-blue-300 scale-[1.02]' : ''
+      }`}
+    >
       <div className="flex justify-between items-start">
         <div>
           <h3 className="text-sm font-medium text-gray-500">{title}</h3>
@@ -32,7 +46,11 @@ const CurrentValueCard: React.FC<CurrentValueCardProps> = ({
               <div className="h-8 w-28 bg-gray-200 rounded animate-pulse"></div>
             ) : (
               <>
-                <p className="text-2xl font-semibold text-gray-900">{value !== null ? value.toFixed(2) : 'N/A'}</p>
+                <p className={`text-2xl font-semibold transition-colors duration-500 ${
+                  isFlashing ? 'text-blue-600' : 'text-gray-900'
+                }`}>
+                  {value !== null ? value.toFixed(2) : 'N/A'}
+                </p>
                 <span className="ml-1 text-sm font-medium text-gray-500">{unit}</span>
               </>
             )}
@@ -42,7 +60,7 @@ const CurrentValueCard: React.FC<CurrentValueCardProps> = ({
           {icon}
         </div>
       </div>
-      
+
       {!isLoading && change !== undefined && (
         <div className="mt-3 flex items-center">
           {isPositiveChange ? (

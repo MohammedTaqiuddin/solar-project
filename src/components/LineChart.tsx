@@ -106,6 +106,8 @@ const LineChart: React.FC<LineChartProps> = ({
         ticks: {
           maxRotation: 45,
           minRotation: 45,
+          autoSkip: true,
+          maxTicksLimit: 20,
         },
       },
       y: {
@@ -116,7 +118,15 @@ const LineChart: React.FC<LineChartProps> = ({
       },
     },
     animation: {
-      duration: 500,
+      duration: 300,
+      easing: 'easeOutQuart',
+    },
+    transitions: {
+      active: {
+        animation: {
+          duration: 200,
+        },
+      },
     },
   };
 
