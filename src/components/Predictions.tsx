@@ -168,14 +168,8 @@ const Predictions: React.FC<PredictionsProps> = ({ activeTab, onTabChange }) => 
     }
   }, []);
 
-  // ── On mount: fetch weather + model info + auto-predict ──────
+  // ── On mount: fetch weather + auto-predict ──────
   useEffect(() => {
-    // Load model info
-    fetch(`${API_URL}/model-info`)
-      .then(r => r.json())
-      .then(d => { if (!d.error) setModelInfo(d); })
-      .catch(() => setApiError('Cannot connect to prediction API.'));
-
     // Fetch weather then immediately predict with live values
     fetchLiveWeather().then(weather => {
       if (weather) {
@@ -193,6 +187,14 @@ const Predictions: React.FC<PredictionsProps> = ({ activeTab, onTabChange }) => 
       }
     });
   }, []);
+
+  // ── Re-fetch model info when month changes ──────
+  useEffect(() => {
+    fetch(`${API_URL}/model-info?month=${month}`)
+      .then(r => r.json())
+      .then(d => { if (!d.error) setModelInfo(d); })
+      .catch(() => setApiError('Cannot connect to prediction API.'));
+  }, [month]);
 
   // ── Manual predict (button click) ───────────────────────────
   const handlePredict = () => {
@@ -517,7 +519,7 @@ const Predictions: React.FC<PredictionsProps> = ({ activeTab, onTabChange }) => 
                 }}
                 options={{
                   responsive: true, maintainAspectRatio: false,
-                  plugins: { title: { display: true, text: 'Avg Hourly Pattern — June (Actual vs Predicted)', font: { size: 13, weight: 'bold' } } },
+                  plugins: { title: { display: true, text: `Avg Hourly Pattern — ${new Date(2000, month - 1, 1).toLocaleString('default', { month: 'long' })} (Actual vs Predicted)`, font: { size: 13, weight: 'bold' } } },
                   scales: { y: { beginAtZero: true, title: { display: true, text: 'kW' } } },
                 }}
               />
